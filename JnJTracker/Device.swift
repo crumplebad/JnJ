@@ -16,31 +16,44 @@ struct Device {
     var manufacturer: String?
     var lastCheckedOutDate: String?
     var lastCheckedOutBy: String?
-    var isCheckedOut: String?
+    var isCheckedOut: Bool?
     
-    init(anObject: AnyObject) {
-        let dict = anObject as? Dictionary<String,String?>
-        if let dict = dict {
+    init(anObject: AnyObject?) {
+        if let dict = anObject{
             if let id = dict["id"]{
-                self.id = id
+                if let id = id {
+                    self.id = id as? String
+                }
             }
             if let device = dict["device"] {
-                self.device = device
+                if let device = device{
+                    self.device = device as? String
+                }
             }
             if let os = dict["os"] {
-                self.os = os
+                if let os = os {
+                    self.os = os as? String
+                }
             }
             if let manufacturer = dict["manufacturer"] {
-                self.manufacturer = manufacturer
+                if let manufacturer = manufacturer {
+                    self.manufacturer = manufacturer as? String
+                }
             }
             if let lastCheckedOutDate = dict["lastCheckedOutDate"] {
-                self.lastCheckedOutDate = lastCheckedOutDate
+                if let lastCheckedOutDate = lastCheckedOutDate {
+                    self.lastCheckedOutDate = lastCheckedOutDate as? String
+                }
             }
             if let lastCheckedOutBy = dict["lastCheckedOutBy"] {
-                self.lastCheckedOutBy = lastCheckedOutBy
+                if let lastCheckedOutBy = lastCheckedOutBy {
+                    self.lastCheckedOutBy = lastCheckedOutBy as? String
+                }
             }
             if let isCheckedOut = dict["isCheckedOut"] {
-                self.isCheckedOut = isCheckedOut
+                if let isCheckedOut = isCheckedOut {
+                    self.isCheckedOut = isCheckedOut as? Bool
+                }
             }
         }
     }

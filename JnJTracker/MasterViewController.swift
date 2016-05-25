@@ -19,7 +19,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         super.viewDidLoad()
         let dataManager = DataManager()
         if let someArray = dataManager.getDeviceData()?.value {
-            dataSource = someArray
+            self.dataSource = someArray
         }
         
         let addButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "insertNewObject:")
@@ -80,10 +80,12 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     // MARK: - Table View
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
         return self.fetchedResultsController.sections?.count ?? 0
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.dataSource.count ?? 0
         let sectionInfo = self.fetchedResultsController.sections![section]
         return sectionInfo.numberOfObjects
     }
@@ -121,9 +123,26 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
 
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
-        let object = self.fetchedResultsController.objectAtIndexPath(indexPath)
-        cell.textLabel!.text = object.valueForKey("timeStamp")!.description
-        cell.detailTextLabel?.text = "check in status"
+//        let object = self.fetchedResultsController.objectAtIndexPath(indexPath)
+//        cell.textLabel!.text = object.valueForKey("timeStamp")!.description
+//        cell.detailTextLabel?.text = "check in status"
+        if let aDevice:Device = self.dataSource[indexPath.row] as Device {
+            if let device = aDevice.device {
+                if let os = aDevice.os {
+                    cell.textLabel!.text = device+" - "+os
+                }
+            }
+            if let isCheckedOut = aDevice.isCheckedOut {
+                if isCheckedOut {
+                    if let lastCheckedOutBy = aDevice.lastCheckedOutBy {
+                        cell.detailTextLabel?.text = "Checked out by "+lastCheckedOutBy
+                    }
+                } else {
+                    cell.detailTextLabel?.text = "Available"
+                }
+            }
+        }
+
     }
 
     // MARK: - Fetched results controller

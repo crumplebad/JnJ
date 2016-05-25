@@ -16,8 +16,7 @@ class Devices: NSObject {
 
         var array = [Device]()
         for device in anArray {
-            let aDevice = Device(anObject: device)
-            array.append(aDevice)
+            array.append(Device(anObject: device))
         }
         value = array
     }
