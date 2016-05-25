@@ -14,10 +14,11 @@ class DataManager {
     func getDeviceData() -> Devices? {
         
         let someObj: AnyObject? = self.readJSONFromFile("device")
-        let data = (someObj as! NSArray) as Array
-        let deviceData: Devices = Devices(anArray: data)
-        
-        return deviceData;
+        if let data = (someObj as? NSArray) as Array? {
+            let deviceData: Devices = Devices(anArray: data)
+
+            return deviceData;
+        }
     
         return nil;
     }
