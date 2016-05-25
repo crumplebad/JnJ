@@ -21,9 +21,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         if let someArray = dataManager.getDeviceData()?.value {
             self.dataSource = someArray
         }
-        
-        let addButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "insertNewObject:")
-        self.navigationItem.leftBarButtonItem = addButton
         if let split = self.splitViewController {
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
