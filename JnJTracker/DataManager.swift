@@ -11,12 +11,15 @@ import UIKit
 
 class DataManager {
 
-    func getDeviceData() -> Array<Device?> {
+    func getDeviceData() -> Devices? {
         
-        let data: Array<AnyObject?> = (self.readJSONFromFile("device") as? Array<AnyObject?>)!
-        let deviceData :Array<Device?> = Devices(data)
+        let someObj: AnyObject? = self.readJSONFromFile("device")
+        let data = (someObj as! NSArray) as Array
+        let deviceData: Devices = Devices(anArray: data)
         
         return deviceData;
+    
+        return nil;
     }
     
     func readJSONFromFile(fileName: String?) -> AnyObject?{

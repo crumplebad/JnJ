@@ -13,12 +13,14 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     var detailViewController: DetailViewController? = nil
     var managedObjectContext: NSManagedObjectContext? = nil
-    var dataSource: Array<Device?> = []
+    var dataSource: [Device] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
         let dataManager = DataManager()
-         dataSource = dataManager.getDeviceData()
+        if let someArray = dataManager.getDeviceData()?.value {
+            dataSource = someArray
+        }
         
         let addButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "insertNewObject:")
         self.navigationItem.leftBarButtonItem = addButton

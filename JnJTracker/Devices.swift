@@ -12,11 +12,11 @@ class Devices: NSObject {
 
     var value = [Device]()
     
-    init(anArray: [Dictionary<String,String!>]) {
+    init(anArray: [AnyObject]) {
 
         var array = [Device]()
         for device in anArray {
-            let aDevice = Device(aDictionary: device)
+            let aDevice = Device(anObject: device)
             array.append(aDevice)
         }
         value = array

@@ -18,27 +18,30 @@ struct Device {
     var lastCheckedOutBy: String?
     var isCheckedOut: String?
     
-    init(aDictionary: Dictionary<String,String!>) {
-        if let id = aDictionary["id"]{
-            self.id = id
-        }
-        if let device = aDictionary["device"] {
-            self.device = device
-        }
-        if let os = aDictionary["os"] {
-            self.os = os
-        }
-        if let manufacturer = aDictionary["manufacturer"] {
-            self.manufacturer = manufacturer
-        }
-        if let lastCheckedOutDate = aDictionary["lastCheckedOutDate"] {
-            self.lastCheckedOutDate = lastCheckedOutDate
-        }
-        if let lastCheckedOutBy = aDictionary["lastCheckedOutBy"] {
-            self.lastCheckedOutBy = lastCheckedOutBy
-        }
-        if let isCheckedOut = aDictionary["isCheckedOut"] {
-            self.isCheckedOut = isCheckedOut
+    init(anObject: AnyObject) {
+        let dict = anObject as? Dictionary<String,String?>
+        if let dict = dict {
+            if let id = dict["id"]{
+                self.id = id
+            }
+            if let device = dict["device"] {
+                self.device = device
+            }
+            if let os = dict["os"] {
+                self.os = os
+            }
+            if let manufacturer = dict["manufacturer"] {
+                self.manufacturer = manufacturer
+            }
+            if let lastCheckedOutDate = dict["lastCheckedOutDate"] {
+                self.lastCheckedOutDate = lastCheckedOutDate
+            }
+            if let lastCheckedOutBy = dict["lastCheckedOutBy"] {
+                self.lastCheckedOutBy = lastCheckedOutBy
+            }
+            if let isCheckedOut = dict["isCheckedOut"] {
+                self.isCheckedOut = isCheckedOut
+            }
         }
     }
 }
