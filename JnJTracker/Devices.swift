@@ -10,18 +10,15 @@ import Foundation
 
 class Devices: NSObject {
 
-    var value: Array<Device>
+    var value = [Device]()
     
-    func init(anArray: Array<AnyObject?>) {
-        
-        let array = Array()
+    init(anArray: [Dictionary<String,String!>]) {
+
+        var array = [Device]()
         for device in anArray {
-            device = 
-            var aDevice: Device = Device(device)
-            array.add
+            let aDevice = Device(aDictionary: device)
+            array.append(aDevice)
         }
         value = array
-        
-        return self;
     }
 }
