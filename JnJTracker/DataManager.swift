@@ -12,7 +12,12 @@ import UIKit
 class DataManager {
 
     func getDeviceData() -> Devices? {
-        
+        //Check for network status and either show local data or make rest call
+        //TESTED ALL SERVICE CALLS
+//        let restCall = RestAPIService()
+//        restCall.getCall()
+//        restCall.deleteCall(deviceData.value[2])
+//        restCall.postCall(CallType.Update, parameter: deviceData.value[2])
         let someObj: AnyObject? = self.readJSONFromFile("device")
         if let data = (someObj as? NSArray) as Array? {
             let deviceData: Devices = Devices(anArray: data)

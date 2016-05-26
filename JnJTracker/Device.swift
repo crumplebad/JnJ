@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 struct Device {
-    var id: String?
+    var id: Int?
     var device: String?
     var os: String?
     var manufacturer: String?
@@ -22,7 +22,7 @@ struct Device {
         if let dict = anObject{
             if let id = dict["id"]{
                 if let id = id {
-                    self.id = id as? String
+                    self.id = id as? Int
                 }
             }
             if let device = dict["device"] {
