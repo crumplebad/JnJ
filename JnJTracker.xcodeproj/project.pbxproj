@@ -21,6 +21,7 @@
 		69DC3F821CF4ABFB00C4ECF1 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69DC3F811CF4ABFB00C4ECF1 /* DataManager.swift */; };
 		69DC3F841CF4AC0200C4ECF1 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69DC3F831CF4AC0200C4ECF1 /* Model.swift */; };
 		69DC3F8A1CF4D25C00C4ECF1 /* Devices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69DC3F891CF4D25C00C4ECF1 /* Devices.swift */; };
+		69F5FA8F1CF770040019DE56 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F5FA8E1CF770040019DE56 /* Util.swift */; };
 		69FB1BF61CF39CF000891C43 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FB1BF51CF39CF000891C43 /* AppDelegate.swift */; };
 		69FB1BF91CF39CF000891C43 /* JnJTracker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 69FB1BF71CF39CF000891C43 /* JnJTracker.xcdatamodeld */; };
 		69FB1BFB1CF39CF000891C43 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FB1BFA1CF39CF000891C43 /* MasterViewController.swift */; };
@@ -78,6 +79,7 @@
 		69DC3F811CF4ABFB00C4ECF1 /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		69DC3F831CF4AC0200C4ECF1 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		69DC3F891CF4D25C00C4ECF1 /* Devices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Devices.swift; sourceTree = "<group>"; };
+		69F5FA8E1CF770040019DE56 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		69FB1BF21CF39CF000891C43 /* JnJTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JnJTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		69FB1BF51CF39CF000891C43 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		69FB1BF81CF39CF000891C43 /* JnJTracker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = JnJTracker.xcdatamodel; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 				69DC3F851CF4AC1300C4ECF1 /* ViewControllers */,
 				69DC3F861CF4AC2200C4ECF1 /* Entity */,
 				69DC3F811CF4ABFB00C4ECF1 /* DataManager.swift */,
+				69F5FA8E1CF770040019DE56 /* Util.swift */,
 				69DC3F831CF4AC0200C4ECF1 /* Model.swift */,
 				6951879D1CF66FEB00DB6079 /* RestAPIService.swift */,
 				69FB1BFE1CF39CF000891C43 /* Main.storyboard */,
@@ -345,6 +348,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69F5FA8F1CF770040019DE56 /* Util.swift in Sources */,
 				69FB1BF61CF39CF000891C43 /* AppDelegate.swift in Sources */,
 				69FB1BF91CF39CF000891C43 /* JnJTracker.xcdatamodeld in Sources */,
 				69DC3F8A1CF4D25C00C4ECF1 /* Devices.swift in Sources */,

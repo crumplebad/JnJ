@@ -15,60 +15,53 @@ class DetailViewController: UIViewController {
     @IBOutlet var osLbl: UILabel!
     @IBOutlet var manufacturerLbl: UILabel!
     @IBOutlet var checkinStatusLbl: UILabel!
-    
+    @IBOutlet var checkInOutBtn: UIButton!
     @IBAction func checkInBtnPressed(sender: AnyObject) {
+//        TODO make a call to data manager and then to REST
+//        let restCall = RestAPIService()
+//        restCall.postDeviceAddUpdateCall(CallType.Update, parameter: self.deviceDetail!)
     }
+
     var deviceDetail: Device? {
         didSet {
-            // Update the view.
             self.configureView()
         }
     }
 
     func configureView() {
-        // Update the user interface for the detail item.
         if let deviceDetail = self.deviceDetail {
 
             if let deviceLbl = self.deviceLbl {
-//                label.text = detail.valueForKey("timeStamp")!.description
-                if let device = deviceDetail.device {
-                    
-                    deviceLbl.text = "Device: "+device
-                }
+                    deviceLbl.text = "Device: "+deviceDetail.device
             }
             if let osLbl = self.osLbl {
-                if let os = deviceDetail.os {
-                    osLbl.text = "OS: "+os
-                }
+                    osLbl.text = "OS: "+deviceDetail.os
             }
             if let manufacturerLbl = self.manufacturerLbl {
-                if let manufacturer = deviceDetail.manufacturer {
-                    manufacturerLbl.text = "Manaufacturer: "+manufacturer
-                }
+                    manufacturerLbl.text = "Manaufacturer: "+deviceDetail.manufacturer
             }
             if let checkinStatusLbl = self.checkinStatusLbl {
-                if let lastCheckedOutBy = deviceDetail.lastCheckedOutBy {
-                    if let lastCheckedOutDate = deviceDetail.lastCheckedOutDate {
-                      checkinStatusLbl.text = "Last Checked Out: "+lastCheckedOutBy+" on "+lastCheckedOutDate
+                if deviceDetail.isCheckedOut {
+                checkinStatusLbl.text = "Last Checked Out: "+deviceDetail.lastCheckedOutBy+" on "+deviceDetail.lastCheckedOutDate
+                    if let checkInOutBtn = self.checkInOutBtn{
+                        checkInOutBtn.setTitle("Check In", forState: UIControlState.Normal)
                     }
                 } else {
                     checkinStatusLbl.text = "Checkin Status: Available"
+                    if let checkInOutBtn = self.checkInOutBtn{
+                        checkInOutBtn.setTitle("Check Out", forState: UIControlState.Normal)
+                    }
                 }
             }
         }
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         self.configureView()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
-
-
 }
-

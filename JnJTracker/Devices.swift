@@ -7,17 +7,46 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 class Devices: NSObject {
 
-    var value = [Device]()
+    var valueArray = [Device]()
     
-    init(anArray: [AnyObject]) {
+    init(json: JSON) {
 
         var array = [Device]()
-        for device in anArray {
-            array.append(Device(anObject: device))
+        let arrayJson = json.arrayValue
+        for item in arrayJson {
+            let aDevice = Device()
+            if let  id = item["id"].int {
+                aDevice.id = id
+            } 
+            if let device = item["device"].string {
+                aDevice.device = device
+            }
+            if let os = item["os"].string {
+                aDevice.os = os
+            }
+            if let manufacturer = item["manufacturer"].string {
+                aDevice.manufacturer = manufacturer
+            }
+            if let lastCheckedOutDate = item["lastCheckedOutDate"].string {
+                aDevice.lastCheckedOutDate = lastCheckedOutDate
+            }
+            if let lastCheckedOutBy = item["lastCheckedOutBy"].string {
+                aDevice.lastCheckedOutBy = lastCheckedOutBy
+            }
+            if let isCheckedOut =  item["isCheckedOut"].bool {
+                aDevice.isCheckedOut = isCheckedOut
+            }
+            
+            array.append(aDevice)
         }
-        value = array
+        valueArray = array
+    }
+    
+    override init() {
+        super.init()
     }
 }

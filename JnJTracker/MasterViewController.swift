@@ -8,6 +8,8 @@
 
 import UIKit
 import CoreData
+import Realm
+import RealmSwift
 
 class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate, AddDeviceViewControllerDelegate {
 
@@ -17,10 +19,13 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     override func viewDidLoad() {
         super.viewDidLoad()
+//        print(Realm.Configuration.defaultConfiguration.path!)
         let dataManager = DataManager()
-        if let someArray = dataManager.getDeviceData()?.value {
-            self.dataSource = someArray
-        }
+        dataManager.getDeviceData({
+            (Void)-> Void in
+            self.dataSource = Model.sharedInstance.devices!.valueArray
+            self.tableView.reloadData()
+        })
         if let split = self.splitViewController {
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
@@ -38,25 +43,25 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         presentViewController(addDeviceViewController, animated: true, completion: nil)
         
     }
-    func insertNewObject(sender: AnyObject) {
-        let context = self.fetchedResultsController.managedObjectContext
-        let entity = self.fetchedResultsController.fetchRequest.entity!
-        let newManagedObject = NSEntityDescription.insertNewObjectForEntityForName(entity.name!, inManagedObjectContext: context)
-             
-        // If appropriate, configure the new managed object.
-        // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-        newManagedObject.setValue(NSDate(), forKey: "timeStamp")
-             
-        // Save the context.
-        do {
-            try context.save()
-        } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            //print("Unresolved error \(error), \(error.userInfo)")
-            abort()
-        }
-    }
+//    func insertNewObject(sender: AnyObject) {
+//        let context = self.fetchedResultsController.managedObjectContext
+//        let entity = self.fetchedResultsController.fetchRequest.entity!
+//        let newManagedObject = NSEntityDescription.insertNewObjectForEntityForName(entity.name!, inManagedObjectContext: context)
+//             
+//        // If appropriate, configure the new managed object.
+//        // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
+//        newManagedObject.setValue(NSDate(), forKey: "timeStamp")
+//             
+//        // Save the context.
+//        do {
+//            try context.save()
+//        } catch {
+//            // Replace this implementation with code to handle the error appropriately.
+//            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//            //print("Unresolved error \(error), \(error.userInfo)")
+//            abort()
+//        }
+//    }
 
     // MARK: - Segues
 
@@ -78,14 +83,13 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     // MARK: - Table View
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        
         return 1
-        return self.fetchedResultsController.sections?.count ?? 0
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
         return self.dataSource.count ?? 0
-        let sectionInfo = self.fetchedResultsController.sections![section]
-        return sectionInfo.numberOfObjects
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -121,24 +125,14 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
 
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
-//        let object = self.fetchedResultsController.objectAtIndexPath(indexPath)
-//        cell.textLabel!.text = object.valueForKey("timeStamp")!.description
-//        cell.detailTextLabel?.text = "check in status"
         if let aDevice:Device = self.dataSource[indexPath.row] as Device {
-            if let device = aDevice.device {
-                if let os = aDevice.os {
-                    cell.textLabel!.text = device+" - "+os
-                }
-            }
-            if let isCheckedOut = aDevice.isCheckedOut {
-                if isCheckedOut {
-                    if let lastCheckedOutBy = aDevice.lastCheckedOutBy {
-                        cell.detailTextLabel?.text = "Checked out by "+lastCheckedOutBy
-                    }
+            
+                cell.textLabel!.text = aDevice.device+" - "+aDevice.os
+                if aDevice.isCheckedOut {
+                        cell.detailTextLabel?.text = "Checked out by "+aDevice.lastCheckedOutBy
                 } else {
                     cell.detailTextLabel?.text = "Available"
                 }
-            }
         }
 
     }
@@ -246,7 +240,10 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     
     
     func addDeviceViewControllerDidSave(sender: AddDeviceViewController) {
-        //Refresh the table view
+        self.dismissViewControllerAnimated(true, completion: nil)
+        if sender.reloadTableFlag {
+            self.tableView.reloadData()
+        }
     }
     
     
