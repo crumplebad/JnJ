@@ -42,7 +42,7 @@ class RestAPIService: NSObject {
         }
     }
     
-    func postDeviceAddUpdateCall( callType: CallType, parameter: Device, completionHandler:(aDevice:Device, success: Bool)->Void) {
+    func postDeviceAddUpdateCall( callType: CallType, parameter: Device, completionHandler:(aDevice:Device?, success: Bool)->Void) {
         //POST
         var endPoint: String = ""
         var param = [String: AnyObject]()
@@ -66,6 +66,7 @@ class RestAPIService: NSObject {
                      let statusCode = (response.response?.statusCode)!
                      if statusCode == 200 {
                         //call completion block for success
+                        completionHandler(aDevice: nil, success: true)
                      } else {
                         
                         print("error calling POST ")
@@ -78,16 +79,18 @@ class RestAPIService: NSObject {
                     print("no result data received when calling GET ")
                     return
                 }
-                let device = JSON(value)
+                let device = self.returnDeviceFromJSON(JSON(value))
                 if callType == .Add {
                     print("The added device details are: " + device.description)
+                    completionHandler(aDevice: device, success: true)
                 } else {
-                    print("The modified device details are: " + device.description)
+//                    print("The modified device details are: " + device.description)
+                    completionHandler(aDevice: nil, success: true)
                 }
         }
     }
     
-    func deleteDeviceCall(parameter: Device) {
+    func deleteDeviceCall(parameter: Device, completionHandler: (success: Bool)->Void) {
         //DELETE
         var endPoint: String = ""
             endPoint = Util.RESTBaseURL()+"/devices/\(parameter.id)"
@@ -97,9 +100,40 @@ class RestAPIService: NSObject {
                 guard response.result.error == nil else {
                     print("error calling DELETE ")
                     print(response.result.error!)
+                    completionHandler(success: false)
                     return
                 }
-                print("DELETE ok")
+                completionHandler(success: true)
+
         }
+    }
+    
+    func returnDeviceFromJSON(deviceJSON: JSON) -> Device {
+        let aDevice: Device = Device()
+        if let  id = deviceJSON["id"].int {
+            aDevice.id = id
+        }
+        if let device = deviceJSON["device"].string {
+            aDevice.device = device
+        }
+        if let os = deviceJSON["os"].string {
+            aDevice.os = os
+        }
+        if let manufacturer = deviceJSON["manufacturer"].string {
+            aDevice.manufacturer = manufacturer
+        }
+        if let lastCheckedOutDate = deviceJSON["lastCheckedOutDate"].string {
+            aDevice.lastCheckedOutDate = lastCheckedOutDate
+        }
+        if let lastCheckedOutBy = deviceJSON["lastCheckedOutBy"].string {
+            aDevice.lastCheckedOutBy = lastCheckedOutBy
+        }
+        if let isCheckedOut =  deviceJSON["isCheckedOut"].bool {
+            aDevice.isCheckedOut = isCheckedOut
+        }
+        aDevice.objectStatus = "normal"
+
+        
+        return aDevice
     }
 }

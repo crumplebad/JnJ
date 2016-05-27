@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import RealmSwift
+import Realm
 
 class DetailViewController: UIViewController {
 
@@ -17,9 +19,34 @@ class DetailViewController: UIViewController {
     @IBOutlet var checkinStatusLbl: UILabel!
     @IBOutlet var checkInOutBtn: UIButton!
     @IBAction func checkInBtnPressed(sender: AnyObject) {
-//        TODO make a call to data manager and then to REST
-//        let restCall = RestAPIService()
-//        restCall.postDeviceAddUpdateCall(CallType.Update, parameter: self.deviceDetail!)
+        if let deviceDeatil = self.deviceDetail{
+            let realmDefault = RLMRealm.defaultRealm()
+            realmDefault.beginWriteTransaction()
+
+            if deviceDeatil.isCheckedOut {
+                self.deviceDetail?.isCheckedOut = false
+                self.deviceDetail?.lastCheckedOutBy = ""
+                self.deviceDetail?.lastCheckedOutDate = ""
+            } else {
+                self.deviceDetail?.isCheckedOut = true
+                self.deviceDetail?.lastCheckedOutBy = "Jay Gaonkar"
+                let dateFormatter:NSDateFormatter = NSDateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+                self.deviceDetail?.lastCheckedOutDate = dateFormatter.stringFromDate(NSDate())
+            }
+            try! realmDefault.commitWriteTransaction()
+        }
+        let dataManager = DataManager()
+        dataManager.updateDevice( self.deviceDetail!, completionhandler: {
+            [unowned self]
+            (success:Bool)->Void in
+            if success {
+                self.configureView()
+            } else {
+//              DO NOTHING
+            }
+            })
+        
     }
 
     var deviceDetail: Device? {

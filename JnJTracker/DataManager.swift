@@ -9,16 +9,18 @@
 import Foundation
 import UIKit
 import RealmSwift
+import Realm
 
 class DataManager {
 
-    func getDeviceData(completionhandler: (Void)->Void) {
-        if Util.isOnline() {
+    func getDevicesData(completionhandler: (Void)->Void) {
+        if Util.isOnline()
+        {
             let restCall = RestAPIService()
             restCall.getDevicesCall({
                 (devices:Devices)->Void in
                 Model.sharedInstance.devices = devices
-                //save to local
+
                 let realm = try! Realm()
                 try! realm.write {
                     realm.delete(realm.objects(Device))
@@ -29,66 +31,137 @@ class DataManager {
                 completionhandler()
             })
         } else {
-            //else read from local
-            let devices: Devices = Devices()
-            let aValueArray = try! Realm().objects(Device)
-            var anArray = [Device]()
-            for aDevice in aValueArray {
-                anArray.append(aDevice)
-            }
-            devices.valueArray = anArray
-            Model.sharedInstance.devices = devices
+            //TODO this bad if there is no data in DB and app is offline
+            syncModelWithDB()
             completionhandler()
         }
     }
-    
     
     func addDevice(aDevice: Device, completionhandler: (Bool)->Void) {
         if Util.isOnline() {
             let restCall = RestAPIService()
             restCall.postDeviceAddUpdateCall(CallType.Add, parameter: aDevice, completionHandler: {
-                (retDevice: Device, success: Bool)->Void in
-
-//            Write to local
-                let realm = try! Realm()
-                try! realm.write {
-                    realm.add(retDevice)
+                [unowned self]
+                (retDevice: Device?, success: Bool)->Void
+                in
+                if let retDevice = retDevice {
+                    let realmDefault = RLMRealm.defaultRealm()
+                    realmDefault.beginWriteTransaction()
+                    retDevice.objectStatus = "normal"
+                    try! realmDefault.commitWriteTransaction()
+                    self.addDeviceToDB(retDevice)
+                    self.syncModelWithDB()
                 }
-                Model.sharedInstance.devices?.valueArray.append(retDevice)
                 completionhandler(success)
             })
         } else {
-//            TODO
-//            add to local
+            let realmDefault = RLMRealm.defaultRealm()
+            realmDefault.beginWriteTransaction()
+            aDevice.objectStatus = "added"
+            try! realmDefault.commitWriteTransaction()
+            addDeviceToDB(aDevice)
+            syncModelWithDB()
             completionhandler(true)
         }
     }
     
-//      TODO change it to update device
     func updateDevice(aDevice: Device, completionhandler: (Bool)->Void) {
         if Util.isOnline() {
-//            update online
-//            let restCall = RestAPIService()
-//             store local and Model
-             completionhandler(true)
+            let restCall = RestAPIService()
+            restCall.postDeviceAddUpdateCall(CallType.Update, parameter: aDevice,completionHandler: {
+                [unowned self]
+                (retDevice: Device?, success: Bool)->Void //retDevice is nil and not to be used.
+                in
+                if success {
+                    let realmDefault = RLMRealm.defaultRealm()
+                    realmDefault.beginWriteTransaction()
+                    aDevice.objectStatus = "normal"
+                    try! realmDefault.commitWriteTransaction()
+                    self.updateObjectInDBWith(aDevice)
+                    self.syncModelWithDB()
+                }
+                completionhandler(success)
+            })
         } else {
-            //update local and Model
+            let realmDefault = RLMRealm.defaultRealm()
+            realmDefault.beginWriteTransaction()
+            aDevice.objectStatus = "updated"
+            try! realmDefault.commitWriteTransaction()
+            updateObjectInDBWith(aDevice)
+            syncModelWithDB()
             completionhandler(true)
         }
     }
-    //TODO change it to delete device
-    func deleteDevice(aDevice: Device, completionhandler: (Bool)->Void) {
+
+    func deleteDevice(aDevice: Device, row: Int, completionhandler: (Bool)->Void) {
         if Util.isOnline() {
-//                delete online
-//            let restCall = RestAPIService()
-//            delete local and Model
-                completionhandler(true)
+            let restCall = RestAPIService()
+            restCall.deleteDeviceCall(aDevice, completionHandler: {
+                [unowned self]
+                (success: Bool)->Void
+                in
+                if success {
+                    self.deleteDeviceInDB(aDevice)
+                    self.syncModelWithDB()
+//                    Model.sharedInstance.devices?.valueArray.removeAtIndex(row)
+                }
+                completionhandler(success)
+            })
         } else {
-            //delete to local and Model
+            let realmDefault = RLMRealm.defaultRealm()
+            realmDefault.beginWriteTransaction()
+            aDevice.objectStatus = "deleted"
+            try! realmDefault.commitWriteTransaction()
+            updateObjectInDBWith(aDevice)
+            syncModelWithDB()
             completionhandler(true)
+        }
+    }
+//      MARK: DB methods (should be reafactored)
+    func addDeviceToDB(device: Device) {
+        let realm = try! Realm()
+        try! realm.write {
+            realm.add(device)
         }
     }
     
+    func updateObjectInDBWith(object: Device)  {
+        let realm = try! Realm()
+        let objectsToUpdate = realm.objects(Device).filter(NSPredicate(format:"id = \(object.id)"))
+        if objectsToUpdate.count == 1 {
+            let deviceToUpdate = objectsToUpdate[0]
+            let realmDefault = RLMRealm.defaultRealm()
+            realmDefault.beginWriteTransaction()
+            deviceToUpdate.device = object.device
+            deviceToUpdate.os = object.os
+            deviceToUpdate.manufacturer = object.manufacturer
+            deviceToUpdate.lastCheckedOutDate = object.lastCheckedOutDate
+            deviceToUpdate.lastCheckedOutBy = object.lastCheckedOutBy
+            deviceToUpdate.isCheckedOut = object.isCheckedOut
+            deviceToUpdate.objectStatus = object.objectStatus
+            try! realmDefault.commitWriteTransaction()
+            
+        }
+    }
+    
+    func deleteDeviceInDB(device: Device) {
+        let realm = try! Realm()
+        let aValueArray = realm.objects(Device).filter(NSPredicate(format:"id = \(device.id)"))
+        try! realm.write {
+            realm.delete(aValueArray)
+        }
+    }
+
+    func syncModelWithDB() {
+        let devices: Devices = Devices()
+        let aValueArray = try! Realm().objects(Device).filter(NSPredicate(format:"objectStatus != 'deleted'"))
+        var anArray = [Device]()
+        for aDevice in aValueArray {
+            anArray.append(aDevice)
+        }
+        devices.valueArray = anArray
+        Model.sharedInstance.devices = devices
+    }
 }
 
 //        TESTING PURPOSE ONLY

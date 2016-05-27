@@ -12,8 +12,4 @@ class Model {
     static let sharedInstance = Model()
 
     var devices: Devices?
-    var addedDevices:[Device]?
-    var deletedDevices:[Device]?
-    var updatedDevices:[Device]?
-    
 }

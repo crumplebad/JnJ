@@ -11,6 +11,13 @@ import UIKit
 import RealmSwift
 import Realm
 
+enum ObjectStatus {
+    case Normal
+    case Added
+    case Updated
+    case Deleted
+}
+
 class Device: Object {
     dynamic var id = 0
     dynamic var device = ""
@@ -19,7 +26,7 @@ class Device: Object {
     dynamic var lastCheckedOutDate = ""
     dynamic var lastCheckedOutBy = ""
     dynamic var isCheckedOut: Bool = false
-    
+    dynamic var objectStatus = ""
 //    convenience required init(anObject: AnyObject?) {
 //        
 //        self.init()

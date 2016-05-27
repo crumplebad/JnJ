@@ -22,8 +22,10 @@
 		69DC3F841CF4AC0200C4ECF1 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69DC3F831CF4AC0200C4ECF1 /* Model.swift */; };
 		69DC3F8A1CF4D25C00C4ECF1 /* Devices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69DC3F891CF4D25C00C4ECF1 /* Devices.swift */; };
 		69F5FA8F1CF770040019DE56 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F5FA8E1CF770040019DE56 /* Util.swift */; };
+		69F5FA931CF888D30019DE56 /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F5FA921CF888D30019DE56 /* ReachabilityManager.swift */; };
+		69F5FA941CF88D8F0019DE56 /* Reachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69F5FA901CF8876A0019DE56 /* Reachability.framework */; };
+		69F5FA951CF88D8F0019DE56 /* Reachability.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 69F5FA901CF8876A0019DE56 /* Reachability.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		69FB1BF61CF39CF000891C43 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FB1BF51CF39CF000891C43 /* AppDelegate.swift */; };
-		69FB1BF91CF39CF000891C43 /* JnJTracker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 69FB1BF71CF39CF000891C43 /* JnJTracker.xcdatamodeld */; };
 		69FB1BFB1CF39CF000891C43 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FB1BFA1CF39CF000891C43 /* MasterViewController.swift */; };
 		69FB1BFD1CF39CF000891C43 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FB1BFC1CF39CF000891C43 /* DetailViewController.swift */; };
 		69FB1C001CF39CF000891C43 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 69FB1BFE1CF39CF000891C43 /* Main.storyboard */; };
@@ -60,6 +62,7 @@
 			files = (
 				695187A41CF6A71100DB6079 /* SwiftyJSON.framework in Embed Frameworks */,
 				695187A51CF6A71100DB6079 /* Realm.framework in Embed Frameworks */,
+				69F5FA951CF88D8F0019DE56 /* Reachability.framework in Embed Frameworks */,
 				695187A61CF6A71100DB6079 /* RealmSwift.framework in Embed Frameworks */,
 				695187A21CF6A6C400DB6079 /* Alamofire.framework in Embed Frameworks */,
 			);
@@ -80,9 +83,10 @@
 		69DC3F831CF4AC0200C4ECF1 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		69DC3F891CF4D25C00C4ECF1 /* Devices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Devices.swift; sourceTree = "<group>"; };
 		69F5FA8E1CF770040019DE56 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		69F5FA901CF8876A0019DE56 /* Reachability.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Reachability.framework; path = Carthage/Build/iOS/Reachability.framework; sourceTree = "<group>"; };
+		69F5FA921CF888D30019DE56 /* ReachabilityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReachabilityManager.swift; sourceTree = "<group>"; };
 		69FB1BF21CF39CF000891C43 /* JnJTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JnJTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		69FB1BF51CF39CF000891C43 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		69FB1BF81CF39CF000891C43 /* JnJTracker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = JnJTracker.xcdatamodel; sourceTree = "<group>"; };
 		69FB1BFA1CF39CF000891C43 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
 		69FB1BFC1CF39CF000891C43 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		69FB1BFF1CF39CF000891C43 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -104,6 +108,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				695187971CF66D0400DB6079 /* Alamofire.framework in Frameworks */,
+				69F5FA941CF88D8F0019DE56 /* Reachability.framework in Frameworks */,
 				6951879A1CF66E2500DB6079 /* Realm.framework in Frameworks */,
 				6951879B1CF66E2500DB6079 /* RealmSwift.framework in Frameworks */,
 				695187A01CF6A32800DB6079 /* SwiftyJSON.framework in Frameworks */,
@@ -130,6 +135,7 @@
 		6951879C1CF66E3100DB6079 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				69F5FA901CF8876A0019DE56 /* Reachability.framework */,
 				6951879F1CF6A32800DB6079 /* SwiftyJSON.framework */,
 				695187981CF66E2500DB6079 /* Realm.framework */,
 				695187991CF66E2500DB6079 /* RealmSwift.framework */,
@@ -185,6 +191,7 @@
 				69DC3F851CF4AC1300C4ECF1 /* ViewControllers */,
 				69DC3F861CF4AC2200C4ECF1 /* Entity */,
 				69DC3F811CF4ABFB00C4ECF1 /* DataManager.swift */,
+				69F5FA921CF888D30019DE56 /* ReachabilityManager.swift */,
 				69F5FA8E1CF770040019DE56 /* Util.swift */,
 				69DC3F831CF4AC0200C4ECF1 /* Model.swift */,
 				6951879D1CF66FEB00DB6079 /* RestAPIService.swift */,
@@ -192,7 +199,6 @@
 				69FB1C011CF39CF000891C43 /* Assets.xcassets */,
 				69FB1C031CF39CF000891C43 /* LaunchScreen.storyboard */,
 				69FB1C061CF39CF000891C43 /* Info.plist */,
-				69FB1BF71CF39CF000891C43 /* JnJTracker.xcdatamodeld */,
 				69DC3F7F1CF4ABD500C4ECF1 /* device.json */,
 			);
 			path = JnJTracker;
@@ -350,8 +356,8 @@
 			files = (
 				69F5FA8F1CF770040019DE56 /* Util.swift in Sources */,
 				69FB1BF61CF39CF000891C43 /* AppDelegate.swift in Sources */,
-				69FB1BF91CF39CF000891C43 /* JnJTracker.xcdatamodeld in Sources */,
 				69DC3F8A1CF4D25C00C4ECF1 /* Devices.swift in Sources */,
+				69F5FA931CF888D30019DE56 /* ReachabilityManager.swift in Sources */,
 				69FB1BFB1CF39CF000891C43 /* MasterViewController.swift in Sources */,
 				69DC3F821CF4ABFB00C4ECF1 /* DataManager.swift in Sources */,
 				69DC3F7E1CF4A8C500C4ECF1 /* Device.swift in Sources */,
@@ -616,19 +622,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		69FB1BF71CF39CF000891C43 /* JnJTracker.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				69FB1BF81CF39CF000891C43 /* JnJTracker.xcdatamodel */,
-			);
-			currentVersion = 69FB1BF81CF39CF000891C43 /* JnJTracker.xcdatamodel */;
-			path = JnJTracker.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 69FB1BEA1CF39CF000891C43 /* Project object */;
 }

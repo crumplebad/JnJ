@@ -29,7 +29,6 @@ class AddDeviceViewController: UIViewController {
     }
     
     @IBAction func donePressed(sender: AnyObject) {
-        //        restCall.deleteCall(deviceData.value[2])
         if validateFields() {
             device = Device()
             device!.device = self.deviceTxtField.text!
@@ -38,32 +37,28 @@ class AddDeviceViewController: UIViewController {
             
             let dataManager = DataManager()
             dataManager.addDevice( device!, completionhandler: {
+                [unowned self, weak delegate = self.delegate!]
                 (success:Bool)->Void in
                 if success {
                     self.reloadTableFlag = true
                 } else {
                     self.reloadTableFlag = false
                 }
+                self.delegate?.addDeviceViewControllerDidSave(self)
             })
         } else {
-            //DO NOTHING
-        }
-        
-        
-        delegate?.addDeviceViewControllerDidSave(self)
-    }
-
-
-
-    func validateFields() -> Bool {
-        
-        if self.deviceTxtField.text!.isEmpty || self.osTxtField.text!.isEmpty || self.manufacturerTxtField.text!.isEmpty  {
             let alertController = UIAlertController(title: "Field Validation Error", message: "All fields must be filled", preferredStyle: .Alert)
             let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Destructive) { alert in
                 alertController.dismissViewControllerAnimated(true, completion: nil)
             }
             alertController.addAction(alertAction)
             presentViewController(alertController, animated: true, completion: nil)
+        }
+    }
+
+    func validateFields() -> Bool {
+        
+        if self.deviceTxtField.text!.isEmpty || self.osTxtField.text!.isEmpty || self.manufacturerTxtField.text!.isEmpty  {
             
             return false
         } else {

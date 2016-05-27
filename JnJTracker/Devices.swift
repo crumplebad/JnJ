@@ -40,6 +40,7 @@ class Devices: NSObject {
             if let isCheckedOut =  item["isCheckedOut"].bool {
                 aDevice.isCheckedOut = isCheckedOut
             }
+                aDevice.objectStatus = "normal"
             
             array.append(aDevice)
         }
