@@ -1,15 +1,14 @@
 # JnJTracker
 
-JnJTracker (JJT) a utility iOS app created for J&J garage to keep track of testing devices. JJT works with and without internet connection. 
+JnJTracker (JJT) a utility iOS app created for J&J Garage to keep track of testing devices. JJT works with and without internet connection. Offline line transactions are synced to the server, once network connection is established.
 
 ### Architecture
-JJT uses a variation of MVC, some where between MVC and VIPER. VIPER was not implemented because of lack of time, not that VIPER takes lot more time than MVC. I had so many new things to learn for this project, wanted to mainatin simplicity.
-Some of the elements of VIPER used in this project are single responsibility and abstraction, which is explained as below. The project can be very easily refactored to complete VIPER architecture.
-- DataManager: There is one app level Datamanager, which as the name suggests manages the data among service class, DataModel and View Controllers. This can be refactored to screen speific DataManager to comply with VIPER.
-- RestAPIService: This class is again app-level class responsible to make all REST service call. This class also can be refactored to be screen specific.
-- Entity Classs: JJT has only one entity class - Device and corresponsding collection class Devices. Since, Device class is sub-classed from Real Object, its poses challenges with over-ridding the init method. To over come this challenge some of the initialization/parsing code was moved to the Devices classes and RestAPIService class, which is not elegant. This has to be refactored, as part of next phase.  
+JJT uses a variation of MVC, somewhere between MVC and VIPER. VIPER was not implemented because of lack of time, not that VIPER takes a lot more time than MVC. I had so many new things to learn for this project, I wanted to maintain simplicity and did not want to spend time on things that were not required.
 
-> The overriding design goal for Markdown's
+Some of the elements of VIPER used in this project are single responsibility and abstraction, which is explained as below. The project can be very easily refactored to confirm to VIPER architecture.
+- DataManager: There is one app level Datamanager, which as the name suggests manages the data among service class, ReachabilityManager, DataModel and View Controllers. This can be refactored to screen speific DataManager to comply with VIPER.
+- RestAPIService: This class is again app-level class responsible to make all REST service calls. This class also can be refactored to be screen specific, and in turn confirm with VIPER.
+- Entity Classs: JJT has only one entity class - 'Device' and corresponsding collection class 'Devices'. Since, Device class is sub-classed from Realm Object, its poses challenges with over-ridding the 'init' method. To over come this challenge some of the initialization/parsing code is moved to the Devices class and RestAPIService class, which is not very elegant. This has to be refactored, as part of next phase.
 
 
 ### Version
@@ -23,7 +22,7 @@ JJT uses a number of open source projects to work properly:
 * [SwiftyJSON] - For parsing JSON data received form the REST service
 * [Realm] - For persisting data locally.
 * [Carthage] - For dependency management.
-* [ Dillinger] - Online Mark Down editor to prepare ReadMe.md
+* [Dillinger] - Online Mark Down editor to prepare ReadMe.md
 
 ### Installation/Run
 JJT use iOS 9.3.1 SDK and Swift 2.2 
@@ -45,14 +44,13 @@ This coding exercise has been a great opportunity to learn Swift, Realm, StoryBo
 - Refactor architecture to VIPER.
 - Refactor entity and other classes.
 - Add waiting screen, while network acitivty is in progress
-- Sync DB on background thread. 
 - Switch Realm, with CoreData.
-- Revist passing strong 'self' to Closures, which causes retain cycle.
+- Revist passing strong 'self' to Closures, which causes retain cycle. Play with [unowned self] instead of [weak self]
 - Revisit error handling especial for Realm.
 
 
- [Alamofire]:<https://github.com/Alamofire/Alamofire>
- [SwiftyJSON]:<https://github.com/SwiftyJSON/SwiftyJSON>
+ [Alamofire]: <https://github.com/Alamofire/Alamofire>
+ [SwiftyJSON]: <https://github.com/SwiftyJSON/SwiftyJSON>
  [Realm]: <https://realm.io>
- [Carthage]:<https://github.com/Carthage/Carthage>
- [ Dillinger]: <http://dillinger.io>
+ [Carthage]: <https://github.com/Carthage/Carthage>
+ [Dillinger]: <http://dillinger.io>
