@@ -37,7 +37,7 @@ class AddDeviceViewController: UIViewController {
             
             let dataManager = DataManager()
             dataManager.addDevice( device!, completionhandler: {
-                [unowned self, weak delegate = self.delegate!]
+//                [unowned self, weak delegate = self.delegate!]
                 (success:Bool)->Void in
                 if success {
                     self.reloadTableFlag = true

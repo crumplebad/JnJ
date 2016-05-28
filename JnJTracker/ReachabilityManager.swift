@@ -9,10 +9,15 @@
 import Foundation
 import Reachability
 
+protocol ReachabilityManagerDelegate: class {
+    func refreshTable(sender:ReachabilityManager)
+}
+
 class ReachabilityManager  {
     
     static let instance = ReachabilityManager()
     
+    weak var delegate: ReachabilityManagerDelegate?
     var gReachability: Reachability? = nil
     var isReachable: Bool = false
     
@@ -30,6 +35,12 @@ class ReachabilityManager  {
         reachability.whenReachable = { reachability in
             // this is called on a background thread, but UI updates must
             // be on the main thread, like this:
+            if reachability.isReachableViaWiFi() {
+                self.isReachable = true
+                self.syncOfflineDataToServer()
+                print("Reachable background threadvia WiFi")
+            }
+            
             dispatch_async(dispatch_get_main_queue()) {
                 if reachability.isReachableViaWiFi() {
                     self.isReachable = true
@@ -37,26 +48,6 @@ class ReachabilityManager  {
                 } else {
                     print("Reachable via Cellular")
                 }
-
-                
-                // create a corresponding local notification
-                let notification = UILocalNotification()
-                notification.alertBody = "Todo Item Is Overdue" // text that will be displayed in the notification
-                notification.alertAction = "open" // text that is displayed after "slide to..." on the lock screen - defaults to "slide to view"
-                notification.fireDate = NSDate().dateByAddingTimeInterval(3.0)  // todo item due date (when notification will be fired)
-                notification.soundName = UILocalNotificationDefaultSoundName // play default sound
-                notification.userInfo = ["title": "test", "UUID": "99"] // assign a unique identifier to the notification so that we can retrieve it later
-                
-                UIApplication.sharedApplication().scheduleLocalNotification(notification)
-                
-//                let alertController = UIAlertController(title: "Network Message", message: "Network Connection Established ", preferredStyle: .Alert)
-//                let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Destructive) { alert in
-//                    alertController.dismissViewControllerAnimated(true, completion: nil)
-//                }
-//                alertController.addAction(alertAction)
-//                let vc: UIViewController  = (UIApplication.sharedApplication().keyWindow?.rootViewController)!;
-//                vc.presentViewController(alertController, animated: true, completion: nil)
-
             }
         }
         reachability.whenUnreachable = { reachability in
@@ -88,4 +79,28 @@ class ReachabilityManager  {
             gReachability.stopNotifier()
         }
     }
+    
+    func syncOfflineDataToServer()  {
+        //show waiting screen
+        
+        let dataManager = DataManager()
+        dataManager.syncOfflineData({
+        (Void)->Void
+        in
+            //dismiss waiting screen
+            print("All tasks! done back in Reachibility manager syncOfflineDataToServer")
+            
+            let alertController = UIAlertController(title: "Network Message", message: "All Offline data has been synced to the server.", preferredStyle: .Alert)
+            let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Destructive) { alert in
+                alertController.dismissViewControllerAnimated(true, completion: nil)
+            }
+            alertController.addAction(alertAction)
+            let vc: UIViewController  = (UIApplication.sharedApplication().keyWindow?.rootViewController)!;
+            vc.presentViewController(alertController, animated: true, completion: nil)
+            self.delegate?.refreshTable(self)
+        })
+        
+    }
+    
+    
 }

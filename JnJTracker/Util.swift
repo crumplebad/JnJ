@@ -25,7 +25,7 @@ class Util: NSObject {
         let isReachable = (flags.rawValue & UInt32(kSCNetworkFlagsReachable)) != 0
         let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
         return (isReachable && !needsConnection)
-            return ReachabilityManager.instance.isReachable
+        return ReachabilityManager.instance.isReachable//invetigate why this does not work
     }
     
     class func RESTBaseURL() -> String {

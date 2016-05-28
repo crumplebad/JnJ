@@ -10,7 +10,7 @@ import UIKit
 import Reachability
 import RealmSwift
 
-class MasterViewController: UITableViewController, AddDeviceViewControllerDelegate {
+class MasterViewController: UITableViewController, AddDeviceViewControllerDelegate, ReachabilityManagerDelegate {
 
     var detailViewController: DetailViewController? = nil
     var dataSource: [Device] = []
@@ -18,6 +18,7 @@ class MasterViewController: UITableViewController, AddDeviceViewControllerDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         print(Realm.Configuration.defaultConfiguration.fileURL!)
+        ReachabilityManager.instance.delegate = self
         let dataManager = DataManager()
         dataManager.getDevicesData({
             [weak self]
@@ -123,8 +124,8 @@ class MasterViewController: UITableViewController, AddDeviceViewControllerDelega
 
         let dataManager = DataManager()
         
-        dataManager.deleteDevice(self.dataSource[indexPath.row], row: indexPath.row, completionhandler: {
-            [unowned self]
+        dataManager.deleteDevice(self.dataSource[indexPath.row], completionhandler: {
+//            [unowned self]
             (success: Bool) -> Void  in
                 if success {
                     self.dataSource = Model.sharedInstance.devices!.valueArray
@@ -148,11 +149,14 @@ class MasterViewController: UITableViewController, AddDeviceViewControllerDelega
         }
     }
     
+    //MARK: ReachabilityManagerDelegate Methods
+    func refreshTable(sender:ReachabilityManager) {
+         self.dataSource = Model.sharedInstance.devices!.valueArray
+         self.tableView.reloadData()
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 }
-

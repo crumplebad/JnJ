@@ -41,7 +41,7 @@ class DataManager {
         if Util.isOnline() {
             let restCall = RestAPIService()
             restCall.postDeviceAddUpdateCall(CallType.Add, parameter: aDevice, completionHandler: {
-                [unowned self]
+//                [unowned self]
                 (retDevice: Device?, success: Bool)->Void
                 in
                 if let retDevice = retDevice {
@@ -69,7 +69,7 @@ class DataManager {
         if Util.isOnline() {
             let restCall = RestAPIService()
             restCall.postDeviceAddUpdateCall(CallType.Update, parameter: aDevice,completionHandler: {
-                [unowned self]
+//                [unowned self]
                 (retDevice: Device?, success: Bool)->Void //retDevice is nil and not to be used.
                 in
                 if success {
@@ -93,17 +93,16 @@ class DataManager {
         }
     }
 
-    func deleteDevice(aDevice: Device, row: Int, completionhandler: (Bool)->Void) {
+    func deleteDevice(aDevice: Device, completionhandler: (Bool)->Void) {
         if Util.isOnline() {
             let restCall = RestAPIService()
             restCall.deleteDeviceCall(aDevice, completionHandler: {
-                [unowned self]
+//                [unowned self]
                 (success: Bool)->Void
                 in
                 if success {
                     self.deleteDeviceInDB(aDevice)
                     self.syncModelWithDB()
-//                    Model.sharedInstance.devices?.valueArray.removeAtIndex(row)
                 }
                 completionhandler(success)
             })
@@ -161,6 +160,67 @@ class DataManager {
         }
         devices.valueArray = anArray
         Model.sharedInstance.devices = devices
+    }
+    
+    func syncOfflineData(completionHandler:(Void)->Void) {
+        let serviceGroup = dispatch_group_create()
+
+        let realm1 = try! Realm()
+        let addedDeviceArray = realm1.objects(Device).filter(NSPredicate(format:"objectStatus = 'added'"))
+        try! realm1.write {
+            realm1.delete(addedDeviceArray)
+        }
+        for addedDevice in addedDeviceArray {
+            
+            dispatch_group_enter(serviceGroup)
+            self.addDevice(addedDevice, completionhandler: {
+                (success: Bool)-> Void
+                in
+                dispatch_group_leave(serviceGroup)
+            })
+        }
+        
+        let realm2 = try! Realm()
+        let updatedDeviceArray = realm2.objects(Device).filter(NSPredicate(format:"objectStatus = 'updated'"))
+        try! realm2.write {
+            realm2.delete(updatedDeviceArray)
+        }
+
+        for updatedDevice in updatedDeviceArray {
+            dispatch_group_enter(serviceGroup)
+            self.updateDevice(updatedDevice, completionhandler: {
+                (success: Bool)-> Void
+                in
+                dispatch_group_leave(serviceGroup)
+            })
+        }
+        
+        let realm3 = try! Realm()
+        let deletedDeviceArray = realm3.objects(Device).filter(NSPredicate(format:"objectStatus = 'deleted'"))
+        try! realm3.write {
+            realm3.delete(deletedDeviceArray)
+        }
+
+        for deletedDevice in deletedDeviceArray {
+            dispatch_group_enter(serviceGroup)
+            self.deleteDevice(deletedDevice, completionhandler:  {
+                (success: Bool)-> Void
+                in
+                dispatch_group_leave(serviceGroup)
+            })
+        }
+        
+        dispatch_group_enter(serviceGroup)
+        self.getDevicesData({
+          (Void)->Void
+            in
+            dispatch_group_leave(serviceGroup)
+        })
+        
+        dispatch_group_notify(serviceGroup, dispatch_get_main_queue()) {
+            print("All set of requests done")
+            completionHandler()
+        }
     }
 }
 

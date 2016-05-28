@@ -38,7 +38,7 @@ class DetailViewController: UIViewController {
         }
         let dataManager = DataManager()
         dataManager.updateDevice( self.deviceDetail!, completionhandler: {
-            [unowned self]
+//            [unowned self]
             (success:Bool)->Void in
             if success {
                 self.configureView()
